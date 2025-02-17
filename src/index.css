@@ -1,0 +1,31 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add this to your CSS file or in a style tag */
+
+#cards-container {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: slide 15s linear infinite;
+  cursor: pointer;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* For individual service cards */
+#cards-container .service-card {
+  min-width: 300px;
+  margin-right: 20px;
+}
+
+
