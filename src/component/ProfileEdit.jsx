@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_URL } from '../Api';
 
 const ProfileEdit = ({ worker, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ const ProfileEdit = ({ worker, onUpdate }) => {
     }
 
     try {
-      const res = await axios.put('http://localhost:8002/api/worker/edit-profile', data, {
+      const res = await axios.put(`${API_URL}/api/worker/edit-profile`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });

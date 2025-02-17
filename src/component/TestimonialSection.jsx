@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import plumber  from '../assets/Images/Plumber-test.jpeg';
 import carpenter from '../assets/Images/carpenter-test.jpeg';
 import chef from '../assets/Images/chef-test.jpeg';
 import painter from '../assets/Images/painter-test.jpeg';
-import plumber from '../assets/Images/plumber-test.jpeg';
 import welder from '../assets/Images/welder-test.jpeg';
 import electrician from '../assets/Images/electrician-test.jpeg';
-import housemaid from '../assets/Images/housemaid-test.jpeg';
-
+import housemaid  from '../assets/Images/housemaid-test.jpeg';
 const testimonials = [
   {
     name: "Ravi Kumar",
