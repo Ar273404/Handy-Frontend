@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API_URL } from "../Api.jsx";
 
-const LoginPage = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,8 +32,9 @@ const LoginPage = () => {
           autoClose: 1000,
           position: "top-right",
         });
-        const { userType, profileImage } = res.data;
-
+        const { userType, profileImage,token } = res.data;
+        {console.log(userType,profileImage,token)};
+        localStorage.setItem("token",token);
         localStorage.setItem("userType", userType); // Store user type (worker or provider)
         localStorage.setItem("profileImage", profileImage); // Store profile image URL
 
@@ -118,4 +119,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

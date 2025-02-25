@@ -1,66 +1,52 @@
-import React from 'react';
+import React from "react";
+import {
+  FaUsers,
+  FaBriefcase,
+  FaChartLine,
+  FaStar,
+  FaGlobe,
+  FaRocket,
+} from "react-icons/fa";
 
 const AboutSection = () => {
-  // Mock data for statistics (replace with real data)
-  const data = {
-    totalWorkers: '15,000+',
-    jobsCompleted: '25,000+',
-    successRate: '98',
-    userSatisfaction: '4.9/5',
-    regionsCovered: '100+',
-    platformGrowth: '120%',
-  };
+  const data = [
+    { title: "Registered Workers", value: "15,000+", icon: <FaUsers /> },
+    { title: "Jobs Completed", value: "25,000+", icon: <FaBriefcase /> },
+    { title: "Success Rate", value: "98%", icon: <FaChartLine /> },
+    { title: "User Satisfaction", value: "4.9/5", icon: <FaStar /> },
+    { title: "Regions Covered", value: "100+", icon: <FaGlobe /> },
+    { title: "Platform Growth", value: "120%", icon: <FaRocket /> },
+  ];
 
   return (
-    <section className="bg-gray-100 dark:bg-gray-800 py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Title */}
+    <section className="bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 py-24">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Transforming the Blue-Collar Workforce
           </h2>
-          <p className="text-xl text-gray-700 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
-            At Handy, we’re reshaping how skilled workers connect with employers—providing a trusted, secure, and efficient platform that empowers workers and simplifies hiring for businesses.
+          <p className="text-xl text-gray-700 dark:text-gray-300 mt-4 max-w-3xl mx-auto">
+            At Handy, we’re reshaping how skilled workers connect with
+            employers—providing a trusted, secure, and efficient platform.
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {/* Total Workers */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.totalWorkers}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Registered Workers</p>
-          </div>
-
-          {/* Jobs Completed */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.jobsCompleted}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Jobs Completed</p>
-          </div>
-
-          {/* Success Rate */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.successRate}%</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Success Rate</p>
-          </div>
-
-          {/* User Satisfaction */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.userSatisfaction}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">User Satisfaction</p>
-          </div>
-
-          {/* Regions Covered */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.regionsCovered}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Regions Covered</p>
-          </div>
-
-          {/* Platform Growth */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
-            <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">{data.platformGrowth}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Platform Growth Rate</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {data.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex flex-col items-center text-center">
+              <div className="text-blue-600 dark:text-yellow-400 text-6xl mb-4 animate-pulse">
+                {item.icon}
+              </div>
+              <h3 className="text-4xl font-bold text-blue-600 dark:text-yellow-400">
+                {item.value}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                {item.title}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

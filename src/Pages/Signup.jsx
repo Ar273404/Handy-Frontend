@@ -33,7 +33,6 @@ const Signup = () => {
     });
   };
 
-
   const handleLocationFetch = () => {
     if (navigator.geolocation) {
       setIsLocationFetching(true); // Start fetching status
@@ -45,6 +44,7 @@ const Signup = () => {
           const response = await axios.get(`${API_URL}/api/auth/signup`, {
             params: { latitude, longitude },
           });
+          console.log(response);
 
           const { address } = response.data;
 
@@ -53,7 +53,7 @@ const Signup = () => {
             city: address.city || "",
             state: address.state || "",
             country: address.country || "",
-            coordinates : [latitude, longitude],
+            coordinates: [latitude, longitude],
           });
         } catch (error) {
           console.error("Error fetching location:", error);
@@ -74,12 +74,10 @@ const Signup = () => {
     //   data.append(key, formData[key]);
     // });
 
-
     try {
       const res = await axios.post(`${API_URL}/api/auth/signup`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
 
       if (res.data.success) {
         toast.success(res.data.message, {
@@ -105,14 +103,25 @@ const Signup = () => {
           coordinates: [],
         });
       }
-
     } catch (error) {
       console.error(error);
-      if (error.response && error.response.data && error.response.data.success === false) {
-        toast.warn(error.response.data.message, {theme: "dark",autoClose: 1000,position: "top-center",});
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.success === false
+      ) {
+        toast.warn(error.response.data.message, {
+          theme: "dark",
+          autoClose: 1000,
+          position: "top-center",
+        });
       } else {
         console.error("Error:", error);
-        toast.error("Something went wrong. Please try again.", {theme: "dark",autoClose: 1000,position: "top-center",});
+        toast.error("Something went wrong. Please try again.", {
+          theme: "dark",
+          autoClose: 1000,
+          position: "top-center",
+        });
       }
     }
   };
@@ -127,17 +136,17 @@ const Signup = () => {
         {/* Toggle Buttons */}
         <div className="flex justify-center mb-6">
           <button
-            className={`px-4 py-2 text-white rounded-l-lg ${formData.userType === "worker" ? "bg-blue-500" : "bg-gray-400"
-              }`}
-            onClick={() => setFormData({ ...formData, userType: "worker" })}
-          >
+            className={`px-4 py-2 text-white rounded-l-lg ${
+              formData.userType === "worker" ? "bg-blue-500" : "bg-gray-400"
+            }`}
+            onClick={() => setFormData({ ...formData, userType: "worker" })}>
             Worker
           </button>
           <button
-            className={`px-4 py-2 text-white rounded-r-lg ${formData.userType === "provider" ? "bg-blue-500" : "bg-gray-400"
-              }`}
-            onClick={() => setFormData({ ...formData, userType: "provider" })}
-          >
+            className={`px-4 py-2 text-white rounded-r-lg ${
+              formData.userType === "provider" ? "bg-blue-500" : "bg-gray-400"
+            }`}
+            onClick={() => setFormData({ ...formData, userType: "provider" })}>
             Provider
           </button>
         </div>
@@ -147,7 +156,9 @@ const Signup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Common Fields */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -159,7 +170,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -171,7 +184,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
               <input
                 type="password"
                 name="password"
@@ -183,7 +198,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
               <input
                 type="tel"
                 name="phone"
@@ -195,7 +212,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Location</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Location
+              </label>
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
@@ -208,12 +227,16 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={handleLocationFetch}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                   Fetch
                 </button>
               </div>
-              {isLocationFetching && <p className="text-sm text-gray-500 mt-2">Fetching your location...</p>} {/* Show fetching message */}
+              {isLocationFetching && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Fetching your location...
+                </p>
+              )}{" "}
+              {/* Show fetching message */}
             </div>
 
             <div className="md:mt-4">
@@ -240,7 +263,9 @@ const Signup = () => {
 
             {/* Profile Image */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Profile Image
+              </label>
               <input
                 type="file"
                 name="profileImage"
@@ -260,7 +285,9 @@ const Signup = () => {
             {formData.userType === "worker" && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Expertise</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Expertise
+                  </label>
                   <input
                     type="text"
                     name="expertise"
@@ -277,7 +304,9 @@ const Signup = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Experience</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Experience
+                  </label>
                   <input
                     type="text"
                     name="experience"
@@ -288,7 +317,9 @@ const Signup = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Expected Compensation</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Expected Compensation
+                  </label>
                   <input
                     type="number"
                     name="expectedCompensation"
@@ -300,7 +331,9 @@ const Signup = () => {
 
                 {/* Aadhar Image */}
                 <div className="relative">
-                  <label className="block text-sm font-medium text-gray-700">Aadhar Card</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Aadhar Card
+                  </label>
                   <input
                     type="file"
                     name="aadharCard"
@@ -317,19 +350,22 @@ const Signup = () => {
                 </div>
               </>
             )}
-
           </div>
 
           <button
             type="submit"
-            className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
+            className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             Signup
           </button>
 
           <div className="mt-4">
             <p className="w-full text-center">
-              Already have an account? <Link to="/login" className="text-indigo-600 hover:text-indigo-700" >Login</Link>
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-indigo-600 hover:text-indigo-700">
+                Login
+              </Link>
             </p>
           </div>
         </form>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaBriefcase, FaCheckCircle, FaUsers } from 'react-icons/fa';
-import heroImage from '../assets/Images/HeroImage.jpeg'; // Replace with your hero image path
+import heroImage from '../assets/Images/DALL·E 2025-02-25 19.48.17 - A professional and vibrant hero section image featuring 11 types of skilled workers in action_ a plumber fixing a sink, an electrician working on wiri.jpg'; // Replace with your hero image path
 
 const HeroSection = ({ counts }) => {
   return (

@@ -1,213 +1,256 @@
-import React, { useState, useEffect } from 'react';
-import { FaSun, FaMoon, FaBell, FaBars, FaTimes } from 'react-icons/fa';
-import { FiLogIn, FiUserPlus } from 'react-icons/fi';
-import { Link } from 'react-router-dom'; // Assuming you are using React Router for navigation
+import React, { useState, useEffect } from "react";
+import { FaBell, FaMoon, FaSun } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import axios from "axios"; // Axios for API requests
+import dummyProfileImage from "../assets/Images/Profile_pic.png";
+import { API_URL } from "../Api.jsx";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const [theme, setTheme] = useState('light');
-  const [dropdown, setDropdown] = useState(false);
-  const [mobileMenu, setMobileMenu] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Track login state
-  const [user, setUser] = useState(null);  // Store logged in user data
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDarkMode, setDarkMode] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+ 
+  // Fetch user details on component mount
+  useEffect(() => {
+    fetchUserProfile();
+  });
 
-  // Toggle theme between light and dark
-  const toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      setTheme('light');
-      localStorage.setItem('theme', 'light');
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/auth/user/me` ,{
+        withCredentials: true, // Ensure cookies are sent
+      });
+      // console.log(response.data);
+
+      if (response.data.success) {
+        setUserType(response.data.user.userType); // "worker" or "provider"
+        // console.log(response.data.user.userType);
+       setProfileImage(
+         response.data.user.profileImage
+           ? response.data.user.profileImage
+           : dummyProfileImage
+       );
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setIsLoggedIn(false);
     }
   };
 
-  // Load theme and user status from localStorage or cookies
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    const storedUser = JSON.parse(localStorage.getItem('user')); // assuming user info is stored in localStorage
-
-    if (storedTheme) {
-      setTheme(storedTheme);
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${API_URL}/api/auth/logout`,
+        null,
+        { withCredentials: true } 
+      );
+       toast.success("Logout successful!", {
+         theme: "dark",
+         autoClose: 1000,
+         position: "top-center",
+       });
+      setIsLoggedIn(false);
+      setUserType(null);
+      setProfileImage(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
+  };
 
-    if (storedUser) {
-      setUser(storedUser);
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  // Apply theme class to html
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
-
-  // Handle logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    localStorage.removeItem('user');
-    // Optionally clear session or JWT tokens here
+  const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark");
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-800 fixed top-0 left-0 right-0 z-50 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Left Section: Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="text-2xl font-bold text-blue-600 dark:text-yellow-400">
-              Handy
-            </Link>
-          </div>
+    <nav className="bg-slate-600 text-white shadow-md dark:bg-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        {/* Logo */}
+        <Link to="/" className="text-xl font-bold">
+          Handy
+        </Link>
 
-          {/* Center Section: Search Field (hidden on mobile) */}
-          <div className="hidden md:flex md:items-center md:w-1/3">
-            <input
-              type="text"
-              placeholder="Search jobs..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-            />
-          </div>
+        {/* Search Bar */}
+        <div className="hidden md:flex md:items-center md:w-1/5">
+          <input
+            type="text"
+            placeholder="Search jobs or workers..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          />
+        </div>
 
-          {/* Right Section: Navigation Links and Icons */}
-          <div className="flex items-center">
-            {/* Desktop Menu */}
-            <div className="hidden md:flex md:items-center md:space-x-4">
-              <Link to="/" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-yellow-400">
-                Home
-              </Link>
-              <Link to="/about" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-yellow-400">
-                About Us
-              </Link>
-              <Link to="/job-post" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-yellow-400">
-                Post Job
-              </Link>
-              <Link to="/find-job" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-yellow-400">
+        {/* Navigation Links */}
+        <div className="hidden md:flex space-x-6">
+          {userType === "worker" ? (
+            <>
+              <Link to="/find-job" className="hover:text-gray-300">
                 Search Jobs
               </Link>
-            </div>
+              <Link to="/worker-dashboard" className="hover:text-gray-300">
+                Dashboard
+              </Link>
+              <Link to="/applications" className="hover:text-gray-300">
+                Applications
+              </Link>
+            </>
+          ) : userType === "provider" ? (
+            <>
+              <Link to="/job-post" className="hover:text-gray-300">
+                Post Job
+              </Link>
+              <Link to="/provider-dashboard" className="hover:text-gray-300">
+                Dashboard
+              </Link>
+              <Link to="/applicants" className="hover:text-gray-300">
+                Applicants
+              </Link>
+            </>
+          ) : null}
 
-            {/* Search Field (visible on mobile) */}
-            <div className="flex md:hidden items-center mr-2">
-              <input
-                type="text"
-                placeholder="Search jobs..."
-                className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-              />
-            </div>
+          {/* <Link to="/about" className="hover:text-gray-300">
+            About Us
+          </Link> */}
+          <Link to="/contact" className="hover:text-gray-300">
+            Contact
+          </Link>
+        </div>
 
-            {/* Notification Icon */}
-            <button className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none">
-              <FaBell size={20} />
-            </button>
+        {/* Right Section */}
+        <div className="flex items-center space-x-4">
+          {/* Notification Icon */}
+          <button className="relative">
+            <FaBell className="text-xl hover:text-gray-300" />
+            <span className="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full w-4 h-4 flex items-center justify-center">
+              3
+            </span>
+          </button>
 
-            {/* Theme Toggle */}
+          {/* Dark Mode Toggle */}
+          <button onClick={toggleDarkMode}>
+            {isDarkMode ? (
+              <FaSun className="text-xl hover:text-gray-300" />
+            ) : (
+              <FaMoon className="text-xl hover:text-gray-300" />
+            )}
+          </button>
+
+          {/* User Menu or Authentication Buttons */}
+          {isLoggedIn ? (
             <div className="relative">
-              <button
-                onClick={() => setDropdown(!dropdown)}
-                className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
-              >
-                {theme === 'light' ? <FaSun size={20} /> : <FaMoon size={20} />}
-              </button>
-              {dropdown && (
-                <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-20">
+              <img
+                src={profileImage || dummyProfileImage}
+                alt="Profile"
+                className="w-8 h-8 rounded-full cursor-pointer"
+                onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+              />
+              {isMobileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg z-10 dark:bg-gray-700 dark:text-white">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    Settings
+                  </Link>
                   <button
-                    onClick={() => { setTheme('light'); setDropdown(false); }}
-                    className="flex items-center px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
-                  >
-                    <FaSun className="mr-2" /> Light Mode
-                  </button>
-                  <button
-                    onClick={() => { setTheme('dark'); setDropdown(false); }}
-                    className="flex items-center px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
-                  >
-                    <FaMoon className="mr-2" /> Dark Mode
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    Logout
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Profile Image (if logged in) */}
-            {isLoggedIn ? (
-              <Link to="/profile" className="ml-4">
-                <img
-                  src={user.profileImage || "https://via.placeholder.com/32"}  // Assuming profile image is stored in user object
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full border-2 border-blue-600 dark:border-yellow-400"
-                />
+          ) : (
+            <div className="space-x-4">
+              <Link
+                to="/login"
+                className="hover:text-gray-300 bg-emerald-700 px-2 py-2 rounded-md">
+                Login
               </Link>
-            ) : (
-              <div className="hidden md:flex md:items-center md:space-x-2 ml-4">
-                <Link to="/login" className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                  Login
-                </Link>
-                <Link to="/signup" className="flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                  Signup
-                </Link>
-              </div>
-            )}
-          </div>
+              <Link
+                to="/signup"
+                className="hover:text-gray-300 bg-emerald-700 px-2 py-2 rounded-md">
+                Signup
+              </Link>
+            </div>
+          )}
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenu(!mobileMenu)}
-              className="p-2 rounded-md text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
-            >
-              {mobileMenu ? <FaTimes size={20} /> : <FaBars size={20} />}
-            </button>
-          </div>
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden text-xl"
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
+            ☰
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenu && (
-        <div className="md:hidden bg-white dark:bg-gray-800 shadow-md">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
-              to="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setMobileMenu(false)}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setMobileMenu(false)}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/job-post"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setMobileMenu(false)}
-            >
-              Job Post
-            </Link>
-            <Link
-              to="/find-job"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setMobileMenu(false)}
-            >
-              Find a Job
-            </Link>
-          </div>
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
-            <div className="flex items-center px-5">
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-blue-700 space-y-4 p-4">
+          {userType === "worker" ? (
+            <>
+              <Link to="/jobs" className="block hover:text-gray-300">
+                Search Jobs
+              </Link>
+              <Link to="/dashboard" className="block hover:text-gray-300">
+                Dashboard
+              </Link>
+              <Link to="/applications" className="block hover:text-gray-300">
+                Applications
+              </Link>
+            </>
+          ) : userType === "provider" ? (
+            <>
+              <Link to="/post-job" className="block hover:text-gray-300">
+                Post Job
+              </Link>
+              <Link to="/dashboard" className="block hover:text-gray-300">
+                Dashboard
+              </Link>
+              <Link to="/applicants" className="block hover:text-gray-300">
+                Applicants
+              </Link>
+            </>
+          ) : null}
+
+          <Link to="/about" className="block hover:text-gray-300">
+            About Us
+          </Link>
+          <Link to="/contact" className="block hover:text-gray-300">
+            Contact
+          </Link>
+          <Link to="/support" className="block hover:text-gray-300">
+            Support
+          </Link>
+
+          {isLoggedIn ? (
+            <>
+              <Link to="/profile" className="block hover:text-gray-300">
+                Profile
+              </Link>
               <button
                 onClick={handleLogout}
-                className="text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-md"
-              >
+                className="block w-full text-left hover:text-gray-300">
                 Logout
               </button>
-            </div>
-          </div>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="block hover:text-gray-300">
+                Login
+              </Link>
+              <Link to="/signup" className="block hover:text-gray-300">
+                Signup
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>
@@ -215,3 +258,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

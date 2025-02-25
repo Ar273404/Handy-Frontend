@@ -1,11 +1,11 @@
 // src/pages/HomePage.js
 
-import React, { useEffect, useState } from 'react';
-import HeroSection from '../component/HeroSection.jsx';
-import TestimonialSection from '../component/TestimonialSection.jsx';
-import ServicesSection from '../component/ServicesSection.jsx';
-import AboutSection from '../component/AboutSection.jsx';
-import Footer from '../component/Footer.jsx';
+import React, { useEffect, useState } from "react";
+import HeroSection from "../component/HeroSection.jsx";
+import TestimonialSection from "../component/TestimonialSection.jsx";
+import ServicesSection from "../component/ServicesSection.jsx";
+import AboutSection from "../component/AboutSection.jsx";
+import Footer from "../component/Footer.jsx";
 
 const HomePage = () => {
   // State to hold counts fetched from API
@@ -18,7 +18,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const response = await fetch('https://api.example.com/counts'); // Replace with your API endpoint
+        const response = await fetch("https://api.example.com/counts"); // Replace with your API endpoint
         const data = await response.json();
         setCounts({
           jobPosted: data.jobPosted,
@@ -26,7 +26,7 @@ const HomePage = () => {
           jobSeekers: data.jobSeekers,
         });
       } catch (error) {
-        console.error('Error fetching counts:', error);
+        console.error("Error fetching counts:", error);
         // Handle error or set default values
       }
     };
