@@ -5,6 +5,8 @@ import axios from "axios"; // Axios for API requests
 import dummyProfileImage from "../assets/Images/Profile_pic.png";
 import { API_URL } from "../Api.jsx";
 import { toast } from "react-toastify";
+import "../i18n.jsx"; // ✅ Import i18n
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,6 +14,14 @@ const Navbar = () => {
   const [userType, setUserType] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+ const { t, i18n } = useTranslation(); // ✅ Access translation function
+ const [language, setLanguage] = useState(i18n.language || "en");
+
+ useEffect(() => {
+   i18n.changeLanguage(language);
+   console.log(language);
+ }, [language]);
+
  
   // Fetch user details on component mount
   useEffect(() => {
@@ -71,14 +81,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold">
-          Handy
+          {t("app_name")}
         </Link>
 
         {/* Search Bar */}
         <div className="hidden md:flex md:items-center md:w-1/5">
           <input
             type="text"
-            placeholder="Search jobs or workers..."
+            placeholder={t("search_placeholder")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
           />
         </div>
@@ -88,34 +98,30 @@ const Navbar = () => {
           {userType === "worker" ? (
             <>
               <Link to="/find-job" className="hover:text-gray-300">
-                Search Jobs
+                {t("search_jobs")}
               </Link>
               <Link to="/worker-dashboard" className="hover:text-gray-300">
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link to="/applications" className="hover:text-gray-300">
-                Applications
+                {t("applications")}
               </Link>
             </>
           ) : userType === "provider" ? (
             <>
               <Link to="/job-post" className="hover:text-gray-300">
-                Post Job
+                {t("post_job")}
               </Link>
               <Link to="/provider-dashboard" className="hover:text-gray-300">
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link to="/applicants" className="hover:text-gray-300">
-                Applicants
+                {t("applicants")}
               </Link>
             </>
           ) : null}
-
-          {/* <Link to="/about" className="hover:text-gray-300">
-            About Us
-          </Link> */}
           <Link to="/contact" className="hover:text-gray-300">
-            Contact
+            {t("contact")}
           </Link>
         </div>
 
@@ -137,7 +143,14 @@ const Navbar = () => {
               <FaMoon className="text-xl hover:text-gray-300" />
             )}
           </button>
-
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-gray-700 text-white p-1 rounded-md">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="bj">Bhojpuri</option>
+          </select>
           {/* User Menu or Authentication Buttons */}
           {isLoggedIn ? (
             <div className="relative">
@@ -152,17 +165,12 @@ const Navbar = () => {
                   <Link
                     to="/profile"
                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    Settings
+                    {t("profile")}
                   </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    Logout
+                    {t("logout")}
                   </button>
                 </div>
               )}
@@ -172,12 +180,12 @@ const Navbar = () => {
               <Link
                 to="/login"
                 className="hover:text-gray-300 bg-emerald-700 px-2 py-2 rounded-md">
-                Login
+                {t("login")}
               </Link>
               <Link
                 to="/signup"
                 className="hover:text-gray-300 bg-emerald-700 px-2 py-2 rounded-md">
-                Signup
+                {t("signup")}
               </Link>
             </div>
           )}
@@ -197,57 +205,57 @@ const Navbar = () => {
           {userType === "worker" ? (
             <>
               <Link to="/jobs" className="block hover:text-gray-300">
-                Search Jobs
+                {t("search_jobs")}
               </Link>
               <Link to="/dashboard" className="block hover:text-gray-300">
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link to="/applications" className="block hover:text-gray-300">
-                Applications
+                {t("applications")}
               </Link>
             </>
           ) : userType === "provider" ? (
             <>
               <Link to="/post-job" className="block hover:text-gray-300">
-                Post Job
+                {t("post_job")}
               </Link>
               <Link to="/dashboard" className="block hover:text-gray-300">
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link to="/applicants" className="block hover:text-gray-300">
-                Applicants
+                {t("applicants")}
               </Link>
             </>
           ) : null}
 
           <Link to="/about" className="block hover:text-gray-300">
-            About Us
+            {t("about_us")}
           </Link>
           <Link to="/contact" className="block hover:text-gray-300">
-            Contact
+            {t("contact")}
           </Link>
           <Link to="/support" className="block hover:text-gray-300">
-            Support
+            {t("support")}
           </Link>
 
           {isLoggedIn ? (
             <>
               <Link to="/profile" className="block hover:text-gray-300">
-                Profile
+                {t("profile")}
               </Link>
               <button
                 onClick={handleLogout}
                 className="block w-full text-left hover:text-gray-300">
-                Logout
+                {t("logout")}
               </button>
             </>
           ) : (
             <>
               <Link to="/login" className="block hover:text-gray-300">
-                Login
+                {t("login")}
               </Link>
               <Link to="/signup" className="block hover:text-gray-300">
-                Signup
+                {t("signup")}
               </Link>
             </>
           )}

@@ -12,7 +12,7 @@ import Chat from "../component/Worker/Chat.jsx";
 import Applications from "../Pages/Application.jsx";
 import ManageJobApplications from "../component/Provider/ManageJobApplication.jsx";
 import CreateJobForm from "../Pages/CreateJobForm.jsx";
-import WorkerProfile from "../Pages/WorkerProgile.jsx";
+import Profile from "../Pages/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <WorkerProfile />,
+        element: <Profile/>,
       },
       {
         path: "/provider/jobs/:jobId",

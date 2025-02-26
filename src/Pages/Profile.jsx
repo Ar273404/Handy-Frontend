@@ -5,19 +5,21 @@ import dummyProfileImage from "../assets/Images/Profile_pic.png"
 import ProfileEdit from "../component/Worker/ProfileEdit.jsx";
 import { API_URL } from "../Api.jsx";
 
-const WorkerProfile = () => {
+const Profile = () => {
   const [worker, setWorker] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
+
   const fetchProfile = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/worker/profile`, {
+      const res = await axios.get(`${API_URL}/api/auth/user/me`, {
         withCredentials: true,
       });
+      // console.log(res.data.user);
       if (res.data.success) {
-        setWorker(res.data.worker);
+        setWorker(res.data.user);
       }
-     { console.log(res);}
+     
     } catch (error) {
       toast.error("Failed to load profile data.", {
         theme: "dark",
@@ -29,12 +31,10 @@ const WorkerProfile = () => {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
-
+  });
   if (!worker) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -51,6 +51,7 @@ const WorkerProfile = () => {
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <img
+              onClick={fetchProfile}
               src={worker.profileImage || dummyProfileImage}
               alt="Profile"
               className="w-24 h-24 rounded-full object-cover"
@@ -99,4 +100,4 @@ const WorkerProfile = () => {
   );
 };
 
-export default WorkerProfile;
+export default Profile;
